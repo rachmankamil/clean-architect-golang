@@ -1,10 +1,8 @@
 package iplocator
 
 import (
-	"ca-amartha/bussiness/news"
 	"context"
 	"encoding/json"
-	"errors"
 	"net/http"
 )
 
@@ -12,18 +10,18 @@ type IPLocator struct {
 	httpClient http.Client
 }
 
-func NewIPLocator() news.IPLocatorRepository {
+func NewIPLocator() *IPLocator {
 	return &IPLocator{
 		httpClient: http.Client{},
 	}
 }
 
-func (iplocator *IPLocator) getLocationByIP(ctx context.Context, ip string) Response {
+func (iplocator *IPLocator) NewsGetLocationByIP(ctx context.Context, ip string) (Response, error) {
 	req, _ := http.NewRequest("GET", "https://ipapi.co/"+ip+"/json/", nil)
 	req.Header.Set("User-Agent", "ipapi.co/#go-v1.3")
 	resp, err := iplocator.httpClient.Do(req)
 	if err != nil {
-		return Response{}
+		return Response{}, err
 	}
 
 	defer resp.Body.Close()
@@ -31,18 +29,8 @@ func (iplocator *IPLocator) getLocationByIP(ctx context.Context, ip string) Resp
 	data := Response{}
 	err = json.NewDecoder(resp.Body).Decode(&data)
 	if err != nil {
-		return Response{}
+		return Response{}, err
 	}
 
-	return data
-}
-
-func (iplocator *IPLocator) NewsGetLocationByIP(ctx context.Context, ip string) (news.IPStatDomain, error) {
-	resp := iplocator.getLocationByIP(ctx, ip)
-
-	if resp != (Response{}) {
-		return news.IPStatDomain{}, errors.New("data not found")
-	}
-
-	return resp.ToNewsDomain(), nil
+	return data, nil
 }

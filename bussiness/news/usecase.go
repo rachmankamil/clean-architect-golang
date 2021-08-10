@@ -3,6 +3,7 @@ package news
 import (
 	"ca-amartha/bussiness"
 	"ca-amartha/bussiness/category"
+	"ca-amartha/driver/thirdparty/iplocator"
 	"context"
 	"encoding/json"
 	"log"
@@ -14,15 +15,15 @@ type newsUsecase struct {
 	newsRepository  Repository
 	categoryUsecase category.Usecase
 	contextTimeout  time.Duration
-	IpLocator       IPLocatorRepository
+	IpLocator       *iplocator.IPLocator
 }
 
-func NewNewsUsecase(nr Repository, cu category.Usecase, ipLoc IPLocatorRepository, timeout time.Duration) Usecase {
+func NewNewsUsecase(nr Repository, cu category.Usecase, timeout time.Duration) Usecase {
 	return &newsUsecase{
 		newsRepository:  nr,
 		categoryUsecase: cu,
 		contextTimeout:  timeout,
-		IpLocator:       ipLoc,
+		IpLocator:       iplocator.NewIPLocator(),
 	}
 }
 

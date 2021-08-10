@@ -1,7 +1,5 @@
 package iplocator
 
-import "ca-amartha/bussiness/news"
-
 type Response struct {
 	IP                 string  `json:"ip"`
 	Version            string  `json:"version"`
@@ -28,14 +26,4 @@ type Response struct {
 	CountryPopulation  float64 `json:"country_population"`
 	Asn                string  `json:"asn"`
 	Org                string  `json:"org"`
-}
-
-func (resp *Response) ToNewsDomain() news.IPStatDomain {
-	return news.IPStatDomain{
-		IP:          resp.IP,
-		Version:     resp.Version,
-		City:        resp.City,
-		Region:      resp.Region,
-		CountryName: resp.CountryName,
-	}
 }

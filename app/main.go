@@ -9,8 +9,6 @@ import (
 	_categoryController "ca-amartha/controller/category"
 	_categoryRepo "ca-amartha/driver/database/category"
 
-	_ipLocatorRepo "ca-amartha/driver/thirdparty/iplocator"
-
 	_dbHelper "ca-amartha/helper/database"
 	"log"
 	"time"
@@ -43,14 +41,12 @@ func main() {
 	timeoutContext := time.Duration(viper.GetInt("context.timeout")) * time.Second
 	e := echo.New()
 
-	ipLocator := _ipLocatorRepo.NewIPLocator()
-
 	categoryRepo := _categoryRepo.NewCategoryRepository(db)
 	categoryUsecase := _categoryUsecase.NewCategoryUsecase(timeoutContext, categoryRepo)
 	_categoryController.NewCategoryController(e, categoryUsecase)
 
 	newsRepo := _newsRepo.NewMySQLNewsRepository(db)
-	newsUsecase := _newsUsecase.NewNewsUsecase(newsRepo, categoryUsecase, ipLocator, timeoutContext)
+	newsUsecase := _newsUsecase.NewNewsUsecase(newsRepo, categoryUsecase, timeoutContext)
 	_newsController.NewNewsController(e, newsUsecase)
 
 	log.Fatal(e.Start(viper.GetString("server.address")))
