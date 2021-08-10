@@ -36,7 +36,3 @@ type Repository interface {
 	GetByTitle(ctx context.Context, newsTitle string) (Domain, error)
 	Store(ctx context.Context, newsDomain *Domain) error
 }
-
-type IPLocatorRepository interface {
-	NewsGetLocationByIP(ctx context.Context, ip string) (IPStatDomain, error)
-}

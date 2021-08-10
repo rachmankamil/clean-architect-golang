@@ -1,9 +1,9 @@
 package news
 
 import (
-	"ca-amartha/bussiness"
-	"ca-amartha/bussiness/category"
-	"ca-amartha/driver/thirdparty/iplocator"
+	"ca-amartha/businesses"
+	"ca-amartha/businesses/category"
+	"ca-amartha/drivers/thirdparties/iplocator"
 	"context"
 	"encoding/json"
 	"log"
@@ -50,7 +50,7 @@ func (nu *newsUsecase) GetByID(ctx context.Context, newsId int) (Domain, error) 
 	defer cancel()
 
 	if newsId <= 0 {
-		return Domain{}, bussiness.ErrNewsIDResource
+		return Domain{}, businesses.ErrNewsIDResource
 	}
 	res, err := nu.newsRepository.GetByID(ctx, newsId)
 	if err != nil {
@@ -64,7 +64,7 @@ func (nu *newsUsecase) GetByTitle(ctx context.Context, newsTitle string) (Domain
 	defer cancel()
 
 	if strings.TrimSpace(newsTitle) == "" {
-		return Domain{}, bussiness.ErrNewsTitleResource
+		return Domain{}, businesses.ErrNewsTitleResource
 	}
 	res, err := nu.newsRepository.GetByTitle(ctx, newsTitle)
 	if err != nil {
@@ -79,7 +79,7 @@ func (nu *newsUsecase) Store(ctx context.Context, ip string, newsDomain *Domain)
 
 	_, err := nu.categoryUsecase.GetByID(ctx, newsDomain.CategoryID)
 	if err != nil {
-		return bussiness.ErrCategoryNotFound
+		return businesses.ErrCategoryNotFound
 	}
 
 	existedNews, err := nu.newsRepository.GetByTitle(ctx, newsDomain.Title)
@@ -87,7 +87,7 @@ func (nu *newsUsecase) Store(ctx context.Context, ip string, newsDomain *Domain)
 		return err
 	}
 	if existedNews != (Domain{}) {
-		return bussiness.ErrDuplicateData
+		return businesses.ErrDuplicateData
 	}
 
 	if strings.TrimSpace(ip) != "" {

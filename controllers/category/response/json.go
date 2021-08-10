@@ -1,7 +1,7 @@
 package response
 
 import (
-	"ca-amartha/bussiness/category"
+	"ca-amartha/businesses/category"
 	"time"
 )
 

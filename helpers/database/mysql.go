@@ -1,8 +1,8 @@
 package database
 
 import (
-	categoryRepo "ca-amartha/driver/database/category"
-	newsRepo "ca-amartha/driver/database/news"
+	categoryRepo "ca-amartha/drivers/databases/category"
+	newsRepo "ca-amartha/drivers/databases/news"
 	"fmt"
 	"log"
 

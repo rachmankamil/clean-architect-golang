@@ -1,7 +1,7 @@
 package news
 
 import (
-	"ca-amartha/bussiness/news"
+	"ca-amartha/businesses/news"
 	"context"
 
 	"gorm.io/gorm"

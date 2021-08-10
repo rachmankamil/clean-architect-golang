@@ -1,7 +1,7 @@
 package category
 
 import (
-	"ca-amartha/bussiness/category"
+	"ca-amartha/businesses/category"
 	"context"
 
 	"gorm.io/gorm"

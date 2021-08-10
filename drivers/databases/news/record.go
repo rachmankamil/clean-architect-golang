@@ -1,7 +1,7 @@
 package news
 
 import (
-	newsUsecase "ca-amartha/bussiness/news"
+	newsUsecase "ca-amartha/businesses/news"
 	"time"
 )
 

@@ -25,7 +25,7 @@ type Repository interface {
 	FindByID(id int) (Domain, error)
 }
 
-// Bussiness Need -> UI
+// businesses Need -> UI
 // - mockup
 // - flow
 // UI -> Swagger

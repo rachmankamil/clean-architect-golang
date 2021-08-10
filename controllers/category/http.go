@@ -1,11 +1,11 @@
 package category
 
 import (
-	"ca-amartha/bussiness/category"
-	"ca-amartha/controller/category/response"
+	"ca-amartha/businesses/category"
+	"ca-amartha/controllers/category/response"
 	"net/http"
 
-	"ca-amartha/controller"
+	controller "ca-amartha/controllers"
 
 	"github.com/labstack/echo"
 )

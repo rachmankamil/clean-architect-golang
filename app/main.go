@@ -1,15 +1,15 @@
 package main
 
 import (
-	_newsUsecase "ca-amartha/bussiness/news"
-	_newsController "ca-amartha/controller/news"
-	_newsRepo "ca-amartha/driver/database/news"
+	_newsUsecase "ca-amartha/businesses/news"
+	_newsController "ca-amartha/controllers/news"
+	_newsRepo "ca-amartha/drivers/databases/news"
 
-	_categoryUsecase "ca-amartha/bussiness/category"
-	_categoryController "ca-amartha/controller/category"
-	_categoryRepo "ca-amartha/driver/database/category"
+	_categoryUsecase "ca-amartha/businesses/category"
+	_categoryController "ca-amartha/controllers/category"
+	_categoryRepo "ca-amartha/drivers/databases/category"
 
-	_dbHelper "ca-amartha/helper/database"
+	_dbHelper "ca-amartha/helpers/database"
 	"log"
 	"time"
 

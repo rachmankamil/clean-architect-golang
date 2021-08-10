@@ -1,9 +1,9 @@
 package news
 
 import (
-	"ca-amartha/bussiness/news"
-	"ca-amartha/controller"
-	"ca-amartha/controller/news/request"
+	"ca-amartha/businesses/news"
+	controller "ca-amartha/controllers"
+	"ca-amartha/controllers/news/request"
 	"net/http"
 
 	"github.com/labstack/echo"

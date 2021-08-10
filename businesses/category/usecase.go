@@ -1,7 +1,7 @@
 package category
 
 import (
-	"ca-amartha/bussiness"
+	"ca-amartha/businesses"
 	"context"
 	"time"
 )
@@ -28,7 +28,7 @@ func (cu *categoryUsecase) GetAll(ctx context.Context) ([]Domain, error) {
 
 func (cu *categoryUsecase) GetByID(ctx context.Context, id int) (Domain, error) {
 	if id <= 0 {
-		return Domain{}, bussiness.ErrIDNotFound
+		return Domain{}, businesses.ErrIDNotFound
 	}
 
 	resp, err := cu.categoryRespository.FindByID(id)

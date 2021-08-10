@@ -1,7 +1,7 @@
 package response
 
 import (
-	"ca-amartha/bussiness/news"
+	"ca-amartha/businesses/news"
 	"time"
 )
 

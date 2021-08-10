@@ -1,4 +1,4 @@
-package bussiness
+package businesses
 
 import "errors"
 
