@@ -3,7 +3,7 @@ package controller
 import (
 	"net/http"
 
-	"github.com/labstack/echo"
+	echo "github.com/labstack/echo/v4"
 )
 
 type BaseResponse struct {

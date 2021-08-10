@@ -6,20 +6,17 @@ import (
 	"ca-amartha/controllers/news/request"
 	"net/http"
 
-	"github.com/labstack/echo"
+	echo "github.com/labstack/echo/v4"
 )
 
 type NewsController struct {
 	newsUseCase news.Usecase
 }
 
-func NewNewsController(e *echo.Echo, newsUC news.Usecase) {
-	controller := &NewsController{
+func NewNewsController(newsUC news.Usecase) *NewsController {
+	return &NewsController{
 		newsUseCase: newsUC,
 	}
-
-	news := e.Group("news")
-	news.POST("/store", controller.Store)
 }
 
 func (ctrl *NewsController) Store(c echo.Context) error {

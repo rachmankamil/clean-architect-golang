@@ -9,11 +9,19 @@ import (
 	_categoryController "ca-amartha/controllers/category"
 	_categoryRepo "ca-amartha/drivers/databases/category"
 
-	_dbHelper "ca-amartha/helpers/database"
+	_userUsecase "ca-amartha/businesses/users"
+	_userController "ca-amartha/controllers/users"
+	_userRepo "ca-amartha/drivers/databases/users"
+
+	_dbDriver "ca-amartha/drivers/mysql"
+
+	_middleware "ca-amartha/app/middleware"
+	_routes "ca-amartha/app/routes"
+
 	"log"
 	"time"
 
-	"github.com/labstack/echo"
+	echo "github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
 )
 
@@ -30,24 +38,41 @@ func init() {
 }
 
 func main() {
-	configdb := _dbHelper.ConfigDB{
+	configDB := _dbDriver.ConfigDB{
 		DB_Username: viper.GetString(`database.user`),
 		DB_Password: viper.GetString(`database.pass`),
 		DB_Host:     viper.GetString(`database.host`),
 		DB_Port:     viper.GetString(`database.port`),
 		DB_Database: viper.GetString(`database.name`),
 	}
-	db := configdb.InitialDB()
-	timeoutContext := time.Duration(viper.GetInt("context.timeout")) * time.Second
-	e := echo.New()
+	db := configDB.InitialDB()
 
+	configJWT := _middleware.ConfigJWT{
+		SecretJWT: viper.GetString(`jwt.secret`),
+	}
+
+	timeoutContext := time.Duration(viper.GetInt("context.timeout")) * time.Second
+
+	e := echo.New()
 	categoryRepo := _categoryRepo.NewCategoryRepository(db)
 	categoryUsecase := _categoryUsecase.NewCategoryUsecase(timeoutContext, categoryRepo)
-	_categoryController.NewCategoryController(e, categoryUsecase)
+	categoryCtrl := _categoryController.NewCategoryController(categoryUsecase)
 
 	newsRepo := _newsRepo.NewMySQLNewsRepository(db)
 	newsUsecase := _newsUsecase.NewNewsUsecase(newsRepo, categoryUsecase, timeoutContext)
-	_newsController.NewNewsController(e, newsUsecase)
+	newsCtrl := _newsController.NewNewsController(newsUsecase)
+
+	userRepo := _userRepo.NewMySQLUserRepository(db)
+	userUsecase := _userUsecase.NewUserUsecase(userRepo, &configJWT, timeoutContext)
+	userCtrl := _userController.NewUserController(userUsecase)
+
+	routesInit := _routes.ControllerList{
+		JWTMiddleware:      configJWT.Init(),
+		UserController:     *userCtrl,
+		NewsController:     *newsCtrl,
+		CategoryController: *categoryCtrl,
+	}
+	routesInit.RouteRegister(e)
 
 	log.Fatal(e.Start(viper.GetString("server.address")))
 }

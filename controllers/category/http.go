@@ -7,20 +7,17 @@ import (
 
 	controller "ca-amartha/controllers"
 
-	"github.com/labstack/echo"
+	echo "github.com/labstack/echo/v4"
 )
 
 type CategoryController struct {
 	categoryUsecase category.Usecase
 }
 
-func NewCategoryController(e *echo.Echo, cu category.Usecase) {
-	controller := &CategoryController{
+func NewCategoryController(cu category.Usecase) *CategoryController {
+	return &CategoryController{
 		categoryUsecase: cu,
 	}
-
-	category := e.Group("category")
-	category.GET("/list", controller.GetAll)
 }
 
 func (ctrl *CategoryController) GetAll(c echo.Context) error {

@@ -1,4 +1,4 @@
-package database
+package mysql_driver
 
 import (
 	categoryRepo "ca-amartha/drivers/databases/category"
