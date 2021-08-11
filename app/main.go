@@ -25,6 +25,7 @@ import (
 
 	echo "github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
+	"gorm.io/gorm"
 )
 
 func init() {
@@ -39,6 +40,14 @@ func init() {
 	}
 }
 
+func dbMigrate(db *gorm.DB) {
+	db.AutoMigrate(
+		&_newsRepo.News{},
+		&_categoryRepo.Category{},
+		&_userRepo.Users{},
+	)
+}
+
 func main() {
 	configDB := _dbDriver.ConfigDB{
 		DB_Username: viper.GetString(`database.user`),
@@ -48,6 +57,7 @@ func main() {
 		DB_Database: viper.GetString(`database.name`),
 	}
 	db := configDB.InitialDB()
+	dbMigrate(db)
 
 	configJWT := _middleware.ConfigJWT{
 		SecretJWT:       viper.GetString(`jwt.secret`),

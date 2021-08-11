@@ -1,6 +1,8 @@
 package middleware
 
 import (
+	controller "ca-amartha/controllers"
+	"net/http"
 	"time"
 
 	"github.com/golang-jwt/jwt"
@@ -22,6 +24,9 @@ func (jwtConf *ConfigJWT) Init() middleware.JWTConfig {
 	return middleware.JWTConfig{
 		Claims:     &JwtCustomClaims{},
 		SigningKey: []byte(jwtConf.SecretJWT),
+		ErrorHandlerWithContext: middleware.JWTErrorHandlerWithContext(func(e error, c echo.Context) error {
+			return controller.NewErrorResponse(c, http.StatusForbidden, e)
+		}),
 	}
 }
 
