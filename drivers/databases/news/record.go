@@ -19,7 +19,7 @@ type News struct {
 
 func fromDomain(domain *newsUsecase.Domain) *News {
 	return &News{
-		Id:         domain.Id,
+		Id:         domain.ID,
 		Title:      domain.Title,
 		Content:    domain.Content,
 		CategoryID: domain.CategoryID,
@@ -29,12 +29,13 @@ func fromDomain(domain *newsUsecase.Domain) *News {
 
 func (rec *News) toDomain() newsUsecase.Domain {
 	return newsUsecase.Domain{
-		Id:         rec.Id,
-		Title:      rec.Title,
-		Content:    rec.Content,
-		CategoryID: rec.CategoryID,
-		CreatedAt:  rec.CreatedAt,
-		UpdatedAt:  rec.UpdatedAt,
-		IPStat:     rec.UserStat,
+		ID:           rec.Id,
+		Title:        rec.Title,
+		Content:      rec.Content,
+		CategoryID:   rec.CategoryID,
+		CategoryName: rec.Category.Title,
+		CreatedAt:    rec.CreatedAt,
+		UpdatedAt:    rec.UpdatedAt,
+		IPStat:       rec.UserStat,
 	}
 }

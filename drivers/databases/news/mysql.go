@@ -21,7 +21,7 @@ func (nr *mysqlNewsRepository) Fetch(ctx context.Context, page, perpage int) ([]
 	rec := []News{}
 
 	offset := (page - 1) * perpage
-	err := nr.Conn.Offset(offset).Limit(perpage).Find(&rec).Error
+	err := nr.Conn.Preload("categories").Offset(offset).Limit(perpage).Find(&rec).Error
 	if err != nil {
 		return []news.Domain{}, 0, err
 	}
@@ -57,13 +57,34 @@ func (nr *mysqlNewsRepository) GetByTitle(ctx context.Context, newsTitle string)
 	return rec.toDomain(), nil
 }
 
-func (nr *mysqlNewsRepository) Store(ctx context.Context, newsDomain *news.Domain) error {
+func (nr *mysqlNewsRepository) Store(ctx context.Context, newsDomain *news.Domain) (news.Domain, error) {
 	rec := fromDomain(newsDomain)
 
-	result := nr.Conn.Create(rec)
+	result := nr.Conn.Create(&rec)
 	if result.Error != nil {
-		return result.Error
+		return news.Domain{}, result.Error
 	}
 
-	return nil
+	err := nr.Conn.Preload("Category").First(&rec, rec.Id).Error
+	if err != nil {
+		return news.Domain{}, result.Error
+	}
+
+	return rec.toDomain(), nil
+}
+
+func (nr *mysqlNewsRepository) Update(ctx context.Context, newsDomain *news.Domain) (news.Domain, error) {
+	rec := fromDomain(newsDomain)
+
+	result := nr.Conn.Save(&rec)
+	if result.Error != nil {
+		return news.Domain{}, result.Error
+	}
+
+	err := nr.Conn.Preload("Category").First(&rec, rec.Id).Error
+	if err != nil {
+		return news.Domain{}, result.Error
+	}
+
+	return rec.toDomain(), nil
 }

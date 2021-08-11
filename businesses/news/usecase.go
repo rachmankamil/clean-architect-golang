@@ -73,23 +73,23 @@ func (nu *newsUsecase) GetByTitle(ctx context.Context, newsTitle string) (Domain
 
 	return res, nil
 }
-func (nu *newsUsecase) Store(ctx context.Context, ip string, newsDomain *Domain) error {
+func (nu *newsUsecase) Store(ctx context.Context, ip string, newsDomain *Domain) (Domain, error) {
 	ctx, cancel := context.WithTimeout(ctx, nu.contextTimeout)
 	defer cancel()
 
 	_, err := nu.categoryUsecase.GetByID(ctx, newsDomain.CategoryID)
 	if err != nil {
-		return businesses.ErrCategoryNotFound
+		return Domain{}, businesses.ErrCategoryNotFound
 	}
 
 	existedNews, err := nu.newsRepository.GetByTitle(ctx, newsDomain.Title)
 	if err != nil {
 		if !strings.Contains(err.Error(), "not found") {
-			return err
+			return Domain{}, err
 		}
 	}
 	if existedNews != (Domain{}) {
-		return businesses.ErrDuplicateData
+		return Domain{}, businesses.ErrDuplicateData
 	}
 
 	if strings.TrimSpace(ip) != "" {
@@ -105,10 +105,24 @@ func (nu *newsUsecase) Store(ctx context.Context, ip string, newsDomain *Domain)
 		newsDomain.IPStat = string(jsonMarshal)
 	}
 
-	err = nu.newsRepository.Store(ctx, newsDomain)
+	result, err := nu.newsRepository.Store(ctx, newsDomain)
 	if err != nil {
-		return err
+		return Domain{}, err
 	}
 
-	return nil
+	return result, nil
+}
+func (nu *newsUsecase) Update(ctx context.Context, newsDomain *Domain) (*Domain, error) {
+	existedNews, err := nu.newsRepository.GetByID(ctx, newsDomain.ID)
+	if err != nil {
+		return &Domain{}, err
+	}
+	newsDomain.ID = existedNews.ID
+
+	result, err := nu.newsRepository.Update(ctx, newsDomain)
+	if err != nil {
+		return &Domain{}, err
+	}
+
+	return &result, nil
 }
