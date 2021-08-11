@@ -26,4 +26,5 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 
 	news := e.Group("news")
 	news.POST("/store", cl.NewsController.Store, middleware.JWTWithConfig(cl.JWTMiddleware))
+	news.PUT("/update", cl.NewsController.Update, middleware.JWTWithConfig(cl.JWTMiddleware))
 }
