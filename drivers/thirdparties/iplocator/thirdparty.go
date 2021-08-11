@@ -1,6 +1,7 @@
 package iplocator
 
 import (
+	"ca-amartha/businesses/iplocator"
 	"context"
 	"encoding/json"
 	"net/http"
@@ -10,18 +11,18 @@ type IPLocator struct {
 	httpClient http.Client
 }
 
-func NewIPLocator() *IPLocator {
+func NewIPLocator() iplocator.Repository {
 	return &IPLocator{
 		httpClient: http.Client{},
 	}
 }
 
-func (iplocator *IPLocator) NewsGetLocationByIP(ctx context.Context, ip string) (Response, error) {
+func (ipl *IPLocator) GetLocationByIP(ctx context.Context, ip string) (iplocator.Domain, error) {
 	req, _ := http.NewRequest("GET", "https://ipapi.co/"+ip+"/json/", nil)
 	req.Header.Set("User-Agent", "ipapi.co/#go-v1.3")
-	resp, err := iplocator.httpClient.Do(req)
+	resp, err := ipl.httpClient.Do(req)
 	if err != nil {
-		return Response{}, err
+		return iplocator.Domain{}, err
 	}
 
 	defer resp.Body.Close()
@@ -29,8 +30,8 @@ func (iplocator *IPLocator) NewsGetLocationByIP(ctx context.Context, ip string) 
 	data := Response{}
 	err = json.NewDecoder(resp.Body).Decode(&data)
 	if err != nil {
-		return Response{}, err
+		return iplocator.Domain{}, err
 	}
 
-	return data, nil
+	return data.toDomain(), nil
 }

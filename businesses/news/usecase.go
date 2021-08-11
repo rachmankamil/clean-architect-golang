@@ -3,7 +3,7 @@ package news
 import (
 	"ca-amartha/businesses"
 	"ca-amartha/businesses/category"
-	"ca-amartha/drivers/thirdparties/iplocator"
+	"ca-amartha/businesses/iplocator"
 	"context"
 	"encoding/json"
 	"log"
@@ -15,15 +15,15 @@ type newsUsecase struct {
 	newsRepository  Repository
 	categoryUsecase category.Usecase
 	contextTimeout  time.Duration
-	IpLocator       *iplocator.IPLocator
+	ipLocator       iplocator.Repository
 }
 
-func NewNewsUsecase(nr Repository, cu category.Usecase, timeout time.Duration) Usecase {
+func NewNewsUsecase(nr Repository, cu category.Usecase, timeout time.Duration, il iplocator.Repository) Usecase {
 	return &newsUsecase{
 		newsRepository:  nr,
 		categoryUsecase: cu,
 		contextTimeout:  timeout,
-		IpLocator:       iplocator.NewIPLocator(),
+		ipLocator:       il,
 	}
 }
 
@@ -93,7 +93,7 @@ func (nu *newsUsecase) Store(ctx context.Context, ip string, newsDomain *Domain)
 	}
 
 	if strings.TrimSpace(ip) != "" {
-		ipLoc, err := nu.IpLocator.NewsGetLocationByIP(ctx, ip)
+		ipLoc, err := nu.ipLocator.GetLocationByIP(ctx, ip)
 		if err != nil {
 			log.Default().Printf("%+v", err)
 		}

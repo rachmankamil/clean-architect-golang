@@ -1,5 +1,7 @@
 package iplocator
 
+import "ca-amartha/businesses/iplocator"
+
 type Response struct {
 	IP                 string  `json:"ip"`
 	Version            string  `json:"version"`
@@ -26,4 +28,14 @@ type Response struct {
 	CountryPopulation  float64 `json:"country_population"`
 	Asn                string  `json:"asn"`
 	Org                string  `json:"org"`
+}
+
+func (resp *Response) toDomain() iplocator.Domain {
+	return iplocator.Domain{
+		IP:          resp.IP,
+		Version:     resp.Version,
+		City:        resp.City,
+		Region:      resp.Region,
+		CountryName: resp.CountryName,
+	}
 }

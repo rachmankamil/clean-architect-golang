@@ -15,6 +15,8 @@ import (
 
 	_dbDriver "ca-amartha/drivers/mysql"
 
+	_ipLocatorDriver "ca-amartha/drivers/thirdparties/iplocator"
+
 	_middleware "ca-amartha/app/middleware"
 	_routes "ca-amartha/app/routes"
 
@@ -55,12 +57,15 @@ func main() {
 	timeoutContext := time.Duration(viper.GetInt("context.timeout")) * time.Second
 
 	e := echo.New()
+
+	iplocatorRepo := _ipLocatorDriver.NewIPLocator()
+
 	categoryRepo := _categoryRepo.NewCategoryRepository(db)
 	categoryUsecase := _categoryUsecase.NewCategoryUsecase(timeoutContext, categoryRepo)
 	categoryCtrl := _categoryController.NewCategoryController(categoryUsecase)
 
 	newsRepo := _newsRepo.NewMySQLNewsRepository(db)
-	newsUsecase := _newsUsecase.NewNewsUsecase(newsRepo, categoryUsecase, timeoutContext)
+	newsUsecase := _newsUsecase.NewNewsUsecase(newsRepo, categoryUsecase, timeoutContext, iplocatorRepo)
 	newsCtrl := _newsController.NewNewsController(newsUsecase)
 
 	userRepo := _userRepo.NewMySQLUserRepository(db)
