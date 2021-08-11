@@ -12,5 +12,9 @@
         "user": "root",
         "pass": "pass",
         "name": "cleanarch"
+    },
+    "jwt" : {
+      "secret" : "supersecret12345!@#$%",
+      "expired" : 1
     }
   }

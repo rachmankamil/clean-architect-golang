@@ -1,19 +1,29 @@
 package main
 
 import (
-	_newsUsecase "ca-amartha/bussiness/news"
-	_newsController "ca-amartha/controller/news"
-	_newsRepo "ca-amartha/driver/database/news"
+	_newsUsecase "ca-amartha/businesses/news"
+	_newsController "ca-amartha/controllers/news"
+	_newsRepo "ca-amartha/drivers/databases/news"
 
-	_categoryUsecase "ca-amartha/bussiness/category"
-	_categoryController "ca-amartha/controller/category"
-	_categoryRepo "ca-amartha/driver/database/category"
+	_categoryUsecase "ca-amartha/businesses/category"
+	_categoryController "ca-amartha/controllers/category"
+	_categoryRepo "ca-amartha/drivers/databases/category"
 
-	_dbHelper "ca-amartha/helper/database"
+	_userUsecase "ca-amartha/businesses/users"
+	_userController "ca-amartha/controllers/users"
+	_userRepo "ca-amartha/drivers/databases/users"
+
+	_dbDriver "ca-amartha/drivers/mysql"
+
+	_ipLocatorDriver "ca-amartha/drivers/thirdparties/iplocator"
+
+	_middleware "ca-amartha/app/middleware"
+	_routes "ca-amartha/app/routes"
+
 	"log"
 	"time"
 
-	"github.com/labstack/echo"
+	echo "github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
 )
 
@@ -30,24 +40,45 @@ func init() {
 }
 
 func main() {
-	configdb := _dbHelper.ConfigDB{
+	configDB := _dbDriver.ConfigDB{
 		DB_Username: viper.GetString(`database.user`),
 		DB_Password: viper.GetString(`database.pass`),
 		DB_Host:     viper.GetString(`database.host`),
 		DB_Port:     viper.GetString(`database.port`),
 		DB_Database: viper.GetString(`database.name`),
 	}
-	db := configdb.InitialDB()
+	db := configDB.InitialDB()
+
+	configJWT := _middleware.ConfigJWT{
+		SecretJWT:       viper.GetString(`jwt.secret`),
+		ExpiresDuration: viper.GetInt(`jwt.expired`),
+	}
+
 	timeoutContext := time.Duration(viper.GetInt("context.timeout")) * time.Second
+
 	e := echo.New()
+
+	iplocatorRepo := _ipLocatorDriver.NewIPLocator()
 
 	categoryRepo := _categoryRepo.NewCategoryRepository(db)
 	categoryUsecase := _categoryUsecase.NewCategoryUsecase(timeoutContext, categoryRepo)
-	_categoryController.NewCategoryController(e, categoryUsecase)
+	categoryCtrl := _categoryController.NewCategoryController(categoryUsecase)
 
 	newsRepo := _newsRepo.NewMySQLNewsRepository(db)
-	newsUsecase := _newsUsecase.NewNewsUsecase(newsRepo, categoryUsecase, timeoutContext)
-	_newsController.NewNewsController(e, newsUsecase)
+	newsUsecase := _newsUsecase.NewNewsUsecase(newsRepo, categoryUsecase, timeoutContext, iplocatorRepo)
+	newsCtrl := _newsController.NewNewsController(newsUsecase)
+
+	userRepo := _userRepo.NewMySQLUserRepository(db)
+	userUsecase := _userUsecase.NewUserUsecase(userRepo, &configJWT, timeoutContext)
+	userCtrl := _userController.NewUserController(userUsecase)
+
+	routesInit := _routes.ControllerList{
+		JWTMiddleware:      configJWT.Init(),
+		UserController:     *userCtrl,
+		NewsController:     *newsCtrl,
+		CategoryController: *categoryCtrl,
+	}
+	routesInit.RouteRegister(e)
 
 	log.Fatal(e.Start(viper.GetString("server.address")))
 }
