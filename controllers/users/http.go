@@ -23,7 +23,7 @@ func (ctrl *UserController) Store(c echo.Context) error {
 	ctx := c.Request().Context()
 
 	req := request.Users{}
-	if err := c.Bind(req); err != nil {
+	if err := c.Bind(&req); err != nil {
 		return controller.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
@@ -33,4 +33,22 @@ func (ctrl *UserController) Store(c echo.Context) error {
 	}
 
 	return controller.NewSuccessResponse(c, "Successfully inserted")
+}
+
+func (ctrl *UserController) CreateToken(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	username := c.QueryParam("username")
+	password := c.QueryParam("password")
+
+	token, err := ctrl.userUseCase.CreateToken(ctx, username, password)
+	if err != nil {
+		return controller.NewErrorResponse(c, http.StatusInternalServerError, err)
+	}
+
+	response := struct {
+		Token string `json:"token"`
+	}{Token: token}
+
+	return controller.NewSuccessResponse(c, response)
 }

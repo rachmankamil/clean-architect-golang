@@ -25,7 +25,7 @@ func (ctrl *NewsController) Store(c echo.Context) error {
 	ip := c.QueryParam("ip")
 
 	req := request.News{}
-	if err := c.Bind(req); err != nil {
+	if err := c.Bind(&req); err != nil {
 		return controller.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 

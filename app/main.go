@@ -48,7 +48,8 @@ func main() {
 	db := configDB.InitialDB()
 
 	configJWT := _middleware.ConfigJWT{
-		SecretJWT: viper.GetString(`jwt.secret`),
+		SecretJWT:       viper.GetString(`jwt.secret`),
+		ExpiresDuration: viper.GetInt(`jwt.expired`),
 	}
 
 	timeoutContext := time.Duration(viper.GetInt("context.timeout")) * time.Second

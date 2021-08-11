@@ -48,9 +48,9 @@ func (nr *mysqlUsersRepository) GetByID(ctx context.Context, userId int) (users.
 	return rec.toDomain(), nil
 }
 
-func (nr *mysqlUsersRepository) GetByUsername(ctx context.Context, newsTitle string) (users.Domain, error) {
+func (nr *mysqlUsersRepository) GetByUsername(ctx context.Context, username string) (users.Domain, error) {
 	rec := Users{}
-	err := nr.Conn.Where("title = ?", newsTitle).First(&rec).Error
+	err := nr.Conn.Where("username = ?", username).First(&rec).Error
 	if err != nil {
 		return users.Domain{}, err
 	}

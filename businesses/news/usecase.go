@@ -84,7 +84,9 @@ func (nu *newsUsecase) Store(ctx context.Context, ip string, newsDomain *Domain)
 
 	existedNews, err := nu.newsRepository.GetByTitle(ctx, newsDomain.Title)
 	if err != nil {
-		return err
+		if !strings.Contains(err.Error(), "not found") {
+			return err
+		}
 	}
 	if existedNews != (Domain{}) {
 		return businesses.ErrDuplicateData

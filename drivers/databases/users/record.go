@@ -6,7 +6,7 @@ import (
 )
 
 type Users struct {
-	Id        int
+	ID        int
 	Name      string
 	Username  string
 	Password  string
@@ -16,7 +16,7 @@ type Users struct {
 
 func (rec *Users) toDomain() users.Domain {
 	return users.Domain{
-		Id:        rec.Id,
+		Id:        rec.ID,
 		Name:      rec.Name,
 		Username:  rec.Username,
 		Password:  rec.Password,
@@ -25,9 +25,9 @@ func (rec *Users) toDomain() users.Domain {
 	}
 }
 
-func fromDomain(userDomain users.Domain) Users {
-	return Users{
-		Id:        userDomain.Id,
+func fromDomain(userDomain users.Domain) *Users {
+	return &Users{
+		ID:        userDomain.Id,
 		Name:      userDomain.Name,
 		Username:  userDomain.Username,
 		Password:  userDomain.Password,

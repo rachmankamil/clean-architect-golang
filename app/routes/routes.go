@@ -18,7 +18,8 @@ type ControllerList struct {
 
 func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	users := e.Group("users")
-	users.POST("/store", cl.UserController.Store)
+	users.POST("/register", cl.UserController.Store)
+	users.GET("/token", cl.UserController.CreateToken)
 
 	category := e.Group("category")
 	category.GET("/list", cl.CategoryController.GetAll, middleware.JWTWithConfig(cl.JWTMiddleware))

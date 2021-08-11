@@ -48,10 +48,11 @@ func (uc *userUsecase) Store(ctx context.Context, userDomain *Domain) error {
 	ctx, cancel := context.WithTimeout(ctx, uc.contextTimeout)
 	defer cancel()
 
-	existedUser := Domain{}
 	existedUser, err := uc.userRepository.GetByUsername(ctx, userDomain.Username)
 	if err != nil {
-		return err
+		if !strings.Contains(err.Error(), "not found") {
+			return err
+		}
 	}
 	if existedUser != (Domain{}) {
 		return businesses.ErrDuplicateData
