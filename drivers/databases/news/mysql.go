@@ -7,17 +7,17 @@ import (
 	"gorm.io/gorm"
 )
 
-type mysqlNewsRepository struct {
+type MySQLRepository struct {
 	Conn *gorm.DB
 }
 
-func NewMySQLNewsRepository(conn *gorm.DB) news.Repository {
-	return &mysqlNewsRepository{
+func NewMySQLRepository(conn *gorm.DB) *MySQLRepository {
+	return &MySQLRepository{
 		Conn: conn,
 	}
 }
 
-func (nr *mysqlNewsRepository) Fetch(ctx context.Context, page, perpage int) ([]news.Domain, int, error) {
+func (nr *MySQLRepository) Fetch(ctx context.Context, page, perpage int) ([]news.Domain, int, error) {
 	rec := []News{}
 
 	offset := (page - 1) * perpage
@@ -39,7 +39,7 @@ func (nr *mysqlNewsRepository) Fetch(ctx context.Context, page, perpage int) ([]
 	return domainNews, int(totalData), nil
 }
 
-func (nr *mysqlNewsRepository) GetByID(ctx context.Context, newsId int) (news.Domain, error) {
+func (nr *MySQLRepository) GetByID(ctx context.Context, newsId int) (news.Domain, error) {
 	rec := News{}
 	err := nr.Conn.Where("id = ?", newsId).First(&rec).Error
 	if err != nil {
@@ -48,7 +48,7 @@ func (nr *mysqlNewsRepository) GetByID(ctx context.Context, newsId int) (news.Do
 	return rec.toDomain(), nil
 }
 
-func (nr *mysqlNewsRepository) GetByTitle(ctx context.Context, newsTitle string) (news.Domain, error) {
+func (nr *MySQLRepository) GetByTitle(ctx context.Context, newsTitle string) (news.Domain, error) {
 	rec := News{}
 	err := nr.Conn.Where("title = ?", newsTitle).First(&rec).Error
 	if err != nil {
@@ -57,7 +57,7 @@ func (nr *mysqlNewsRepository) GetByTitle(ctx context.Context, newsTitle string)
 	return rec.toDomain(), nil
 }
 
-func (nr *mysqlNewsRepository) Store(ctx context.Context, newsDomain *news.Domain) (news.Domain, error) {
+func (nr *MySQLRepository) Store(ctx context.Context, newsDomain *news.Domain) (news.Domain, error) {
 	rec := fromDomain(newsDomain)
 
 	result := nr.Conn.Create(&rec)
@@ -73,7 +73,7 @@ func (nr *mysqlNewsRepository) Store(ctx context.Context, newsDomain *news.Domai
 	return rec.toDomain(), nil
 }
 
-func (nr *mysqlNewsRepository) Update(ctx context.Context, newsDomain *news.Domain) (news.Domain, error) {
+func (nr *MySQLRepository) Update(ctx context.Context, newsDomain *news.Domain) (news.Domain, error) {
 	rec := fromDomain(newsDomain)
 
 	result := nr.Conn.Save(&rec)

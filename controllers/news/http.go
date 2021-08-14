@@ -55,7 +55,10 @@ func (ctrl *NewsController) Update(c echo.Context) error {
 	}
 
 	domainReq := req.ToDomain()
-	idInt, _ := strconv.Atoi(id)
+	idInt, err := strconv.Atoi(id)
+	if err != nil {
+		return controller.NewErrorResponse(c, http.StatusBadRequest, errors.New("missing required id"))
+	}
 	domainReq.ID = idInt
 	resp, err := ctrl.newsUseCase.Update(ctx, domainReq)
 	if err != nil {

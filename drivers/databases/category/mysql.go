@@ -7,23 +7,28 @@ import (
 	"gorm.io/gorm"
 )
 
-type categoryRepository struct {
+type MySQLRepository struct {
 	conn *gorm.DB
 }
 
-func NewCategoryRepository(conn *gorm.DB) category.Repository {
-	return &categoryRepository{
+//NewMySQLRepository we need this to work around the repository test
+func NewMySQLRepository(conn *gorm.DB) *MySQLRepository {
+	return &MySQLRepository{
 		conn: conn,
 	}
 }
 
-func (cr *categoryRepository) Find(ctx context.Context, active string) ([]category.Domain, error) {
+func (cr *MySQLRepository) Find(ctx context.Context, active string) ([]category.Domain, error) {
 	rec := []Category{}
 
-	query := cr.conn.Where("archive = ?", false)
+	query := cr.conn.Debug().Where("archive = ?", false)
 
 	if active != "" {
-		query = query.Where("active = ?", active)
+		if active == "false" {
+			query = query.Where("active = ?", false)
+		} else {
+			query = query.Where("active = ?", true)
+		}
 	}
 
 	err := query.Find(&rec).Error
@@ -39,7 +44,7 @@ func (cr *categoryRepository) Find(ctx context.Context, active string) ([]catego
 	return categoryDomain, nil
 }
 
-func (cr *categoryRepository) FindByID(id int) (category.Domain, error) {
+func (cr *MySQLRepository) FindByID(id int) (category.Domain, error) {
 	rec := Category{}
 
 	if err := cr.conn.Where("id = ?", id).First(&rec).Error; err != nil {

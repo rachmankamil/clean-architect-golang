@@ -62,6 +62,7 @@ func (uc *userUsecase) Store(ctx context.Context, userDomain *Domain) error {
 	if err != nil {
 		return businesses.ErrInternalServer
 	}
+
 	err = uc.userRepository.Store(ctx, userDomain)
 	if err != nil {
 		return err

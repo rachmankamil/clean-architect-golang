@@ -1,0 +1,28 @@
+package databases
+
+import (
+	categoryDomain "ca-amartha/businesses/category"
+	categoryDB "ca-amartha/drivers/databases/category"
+
+	newsDomain "ca-amartha/businesses/news"
+	newsDB "ca-amartha/drivers/databases/news"
+
+	userDomain "ca-amartha/businesses/users"
+	userDB "ca-amartha/drivers/databases/users"
+
+	"gorm.io/gorm"
+)
+
+//NewCategoryRepository Factory with category domain
+func NewCategoryRepository(conn *gorm.DB) categoryDomain.Repository {
+	return categoryDB.NewMySQLRepository(conn)
+}
+
+//NewNewsRepository Factory with news domain
+func NewNewsRepository(conn *gorm.DB) newsDomain.Repository {
+	return newsDB.NewMySQLRepository(conn)
+}
+
+func NewUserRepository(conn *gorm.DB) userDomain.Repository {
+	return userDB.NewMySQLRepository(conn)
+}
