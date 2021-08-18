@@ -1,6 +1,7 @@
 package routes
 
 import (
+	middlewareApp "ca-amartha/app/middleware"
 	"ca-amartha/controllers/category"
 	"ca-amartha/controllers/news"
 	"ca-amartha/controllers/users"
@@ -24,7 +25,7 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	category := e.Group("category")
 	category.GET("/list", cl.CategoryController.GetAll, middleware.JWTWithConfig(cl.JWTMiddleware))
 
-	news := e.Group("news")
-	news.POST("/store", cl.NewsController.Store, middleware.JWTWithConfig(cl.JWTMiddleware))
-	news.PUT("/update", cl.NewsController.Update, middleware.JWTWithConfig(cl.JWTMiddleware))
+	news := e.Group("news", middleware.JWTWithConfig(cl.JWTMiddleware))
+	news.POST("/store", cl.NewsController.Store, middlewareApp.RoleValidation("NewsAnchor"))
+	news.PUT("/update", cl.NewsController.Update)
 }
