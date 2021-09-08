@@ -4,6 +4,7 @@ import (
 	"ca-amartha/businesses/users"
 	controller "ca-amartha/controllers"
 	"ca-amartha/controllers/users/request"
+	"context"
 	"net/http"
 
 	echo "github.com/labstack/echo/v4"
@@ -51,4 +52,13 @@ func (ctrl *UserController) CreateToken(c echo.Context) error {
 	}{Token: token}
 
 	return controller.NewSuccessResponse(c, response)
+}
+
+func (ctrl *UserController) UserRole(id int) string {
+	role := ""
+	user, err := ctrl.userUseCase.GetByID(context.Background(), id)
+	if err == nil {
+		role = user.Name
+	}
+	return role
 }

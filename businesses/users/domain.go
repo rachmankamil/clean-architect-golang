@@ -17,6 +17,7 @@ type Domain struct {
 type Usecase interface {
 	CreateToken(ctx context.Context, username, password string) (string, error)
 	Store(ctx context.Context, data *Domain) error
+	GetByID(ctx context.Context, id int) (Domain, error)
 }
 
 type Repository interface {

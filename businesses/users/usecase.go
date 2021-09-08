@@ -69,3 +69,7 @@ func (uc *userUsecase) Store(ctx context.Context, userDomain *Domain) error {
 
 	return nil
 }
+
+func (uc *userUsecase) GetByID(ctx context.Context, id int) (Domain, error) {
+	return Domain{}, nil
+}

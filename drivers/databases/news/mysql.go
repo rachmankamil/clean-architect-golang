@@ -11,7 +11,7 @@ type mysqlNewsRepository struct {
 	Conn *gorm.DB
 }
 
-func NewMySQLNewsRepository(conn *gorm.DB) news.Repository {
+func NewMySQLRepository(conn *gorm.DB) news.Repository {
 	return &mysqlNewsRepository{
 		Conn: conn,
 	}

@@ -7,17 +7,17 @@ import (
 	"net/http"
 )
 
-type IPLocator struct {
+type IpAPI struct {
 	httpClient http.Client
 }
 
-func NewIPLocator() iplocator.Repository {
-	return &IPLocator{
+func NewIpAPI() iplocator.Repository {
+	return &IpAPI{
 		httpClient: http.Client{},
 	}
 }
 
-func (ipl *IPLocator) GetLocationByIP(ctx context.Context, ip string) (iplocator.Domain, error) {
+func (ipl *IpAPI) GetLocationByIP(ctx context.Context, ip string) (iplocator.Domain, error) {
 	req, _ := http.NewRequest("GET", "https://ipapi.co/"+ip+"/json/", nil)
 	req.Header.Set("User-Agent", "ipapi.co/#go-v1.3")
 	resp, err := ipl.httpClient.Do(req)
