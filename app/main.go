@@ -1,6 +1,8 @@
 package main
 
 import (
+	_driverFactory "ca-amartha/drivers"
+
 	_newsUsecase "ca-amartha/businesses/news"
 	_newsController "ca-amartha/controllers/news"
 	_newsRepo "ca-amartha/drivers/databases/news"
@@ -14,8 +16,6 @@ import (
 	_userRepo "ca-amartha/drivers/databases/users"
 
 	_dbDriver "ca-amartha/drivers/mysql"
-
-	_ipLocatorDriver "ca-amartha/drivers/thirdparties/iplocator"
 
 	_middleware "ca-amartha/app/middleware"
 	_routes "ca-amartha/app/routes"
@@ -68,17 +68,17 @@ func main() {
 
 	e := echo.New()
 
-	iplocatorRepo := _ipLocatorDriver.NewIPLocator()
+	iplocatorRepo := _driverFactory.NewIPLocatorRepository()
 
-	categoryRepo := _categoryRepo.NewCategoryRepository(db)
+	categoryRepo := _driverFactory.NewCategoryRepository(db)
 	categoryUsecase := _categoryUsecase.NewCategoryUsecase(timeoutContext, categoryRepo)
 	categoryCtrl := _categoryController.NewCategoryController(categoryUsecase)
 
-	newsRepo := _newsRepo.NewMySQLNewsRepository(db)
+	newsRepo := _driverFactory.NewNewsRepository(db)
 	newsUsecase := _newsUsecase.NewNewsUsecase(newsRepo, categoryUsecase, timeoutContext, iplocatorRepo)
 	newsCtrl := _newsController.NewNewsController(newsUsecase)
 
-	userRepo := _userRepo.NewMySQLUserRepository(db)
+	userRepo := _driverFactory.NewUserRepository(db)
 	userUsecase := _userUsecase.NewUserUsecase(userRepo, &configJWT, timeoutContext)
 	userCtrl := _userController.NewUserController(userUsecase)
 
