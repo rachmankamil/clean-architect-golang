@@ -11,7 +11,7 @@ type IpAPI struct {
 	httpClient http.Client
 }
 
-func NewIpAPI() *IpAPI {
+func NewIpAPI() iplocator.Repository {
 	return &IpAPI{
 		httpClient: http.Client{},
 	}
