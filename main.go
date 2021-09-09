@@ -2,6 +2,7 @@ package main
 
 import (
 	_driverFactory "ca-amartha/drivers"
+	"os"
 
 	_newsUsecase "ca-amartha/businesses/news"
 	_newsController "ca-amartha/controllers/news"
@@ -29,7 +30,8 @@ import (
 )
 
 func init() {
-	viper.SetConfigFile(`app/config.json`)
+	appPath := os.Getenv("APP_PATH")
+	viper.SetConfigFile(appPath + `/app/config/config.json`)
 	err := viper.ReadInConfig()
 	if err != nil {
 		panic(err)
