@@ -1,6 +1,9 @@
 package mysql_driver
 
 import (
+	"ca-amartha/drivers/mysql/category"
+	"ca-amartha/drivers/mysql/news"
+	"ca-amartha/drivers/mysql/users"
 	"fmt"
 	"log"
 
@@ -30,4 +33,12 @@ func (config *ConfigDB) InitialDB() *gorm.DB {
 	}
 
 	return db
+}
+
+func DBMigrate(db *gorm.DB) {
+	db.AutoMigrate(
+		&news.News{},
+		&category.Category{},
+		&users.Users{},
+	)
 }

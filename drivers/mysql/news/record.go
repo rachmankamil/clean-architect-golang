@@ -2,7 +2,7 @@ package news
 
 import (
 	newsUsecase "ca-amartha/businesses/news"
-	"ca-amartha/drivers/databases/category"
+	"ca-amartha/drivers/mysql/category"
 	"time"
 )
 

@@ -2,13 +2,13 @@ package drivers
 
 import (
 	categoryDomain "ca-amartha/businesses/category"
-	categoryDB "ca-amartha/drivers/databases/category"
+	categoryDB "ca-amartha/drivers/mysql/category"
 
 	newsDomain "ca-amartha/businesses/news"
-	newsDB "ca-amartha/drivers/databases/news"
+	newsDB "ca-amartha/drivers/mysql/news"
 
 	userDomain "ca-amartha/businesses/users"
-	userDB "ca-amartha/drivers/databases/users"
+	userDB "ca-amartha/drivers/mysql/users"
 
 	ipLocatorDomain "ca-amartha/businesses/iplocator"
 	ipAPI "ca-amartha/drivers/thirdparties/ipapi"
