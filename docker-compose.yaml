@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  kampus-merdeka:
+    build: .
+    restart: "no"
+    ports:
+      - 8005:8080
+
+  mysql-kampus-merdeka:
+    image: mariadb:10.1
+    hostname: mysql.docker
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - 3336:3306
+    restart: "no"

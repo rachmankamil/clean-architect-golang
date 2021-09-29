@@ -24,9 +24,9 @@ const JWT_EXP int = 1
 func InitDB(status string) *gorm.DB {
 	db := "kampusmerdeka"
 	if status == "testing" {
-		db = "kampusmerdeka-test"
+		db = "kampusmerdeka_test"
 	}
-	connectionString := fmt.Sprintf("root:masukaja@tcp(0.0.0.0:3306)/%s?parseTime=True", db)
+	connectionString := fmt.Sprintf("root:masukaja@tcp(mysql-kampus-merdeka:3306)/%s?parseTime=True", db)
 
 	var err error
 	DB, err := gorm.Open(mysql.Open(connectionString), &gorm.Config{})
