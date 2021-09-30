@@ -11,7 +11,8 @@ import (
 )
 
 type JwtCustomClaims struct {
-	ID int `json:"id"`
+	ID   int    `json:"id"`
+	Role string `json:"role"`
 	jwt.StandardClaims
 }
 
@@ -34,6 +35,7 @@ func (jwtConf *ConfigJWT) Init() middleware.JWTConfig {
 func (jwtConf *ConfigJWT) GenerateToken(userID int) string {
 	claims := JwtCustomClaims{
 		userID,
+		"admin",
 		jwt.StandardClaims{
 			ExpiresAt: time.Now().Local().Add(time.Hour * time.Duration(int64(jwtConf.ExpiresDuration))).Unix(),
 		},
