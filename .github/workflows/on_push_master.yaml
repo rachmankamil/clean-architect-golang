@@ -15,7 +15,7 @@ jobs:
   api-test:
     name: api test - run unitest on action
     runs-on: ubuntu-latest
-    container: golang:1.16-alpine
+    container: golang:1.16
     services:
       mysql:
         image: mariadb:10.1
