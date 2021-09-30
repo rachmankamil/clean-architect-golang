@@ -1,0 +1,41 @@
+name: on-push-master
+
+on:
+  pull_request:
+    branches:
+      - 'master'
+  push:
+    branches:
+      - 'master'
+      - 'feature-*'
+      - 'hotfix-*'
+      - 'bug-*'
+
+jobs:
+  api-test:
+    name: api test - run unitest on action
+    runs-on: ubuntu-latest
+    container: golang:1.16-alpine
+    services:
+      mysql:
+        image: mariadb:10.1
+        env:
+          MYSQL_ROOT_PASSWORD: masukaja
+        ports:
+          - 3306:3306
+    strategy:
+      matrix:
+        go: [ '1.16' ]
+    steps:
+      - uses: action/checkout@v2
+      - name: create database
+        run: |
+          apt-get update
+          apt-get install -y mariadb-client
+          mysql --host mysql -uroot -pmasukaja -e "CREATE DATABASE IF NOT EXISTS cleanarch"
+      - name: running unitest
+        run: |
+          echo "${{ secret.ENV }}" > ./app/config/config.json
+          # mv ./app/config/example-config.json ./app/config/config.json
+          go mod tidy
+          go test ./...-cover -failfast
