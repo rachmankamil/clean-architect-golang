@@ -71,7 +71,7 @@ func main() {
 	iplocatorRepo := _driverFactory.NewIPLocatorRepository()
 
 	categoryRepo := _driverFactory.NewCategoryRepository(db)
-	categoryUsecase := _categoryUsecase.NewCategoryUsecase(timeoutContext, categoryRepo)
+	categoryUsecase := _categoryUsecase.NewCategoryUsecase(timeoutContext, categoryRepo, nil)
 	categoryCtrl := _categoryController.NewCategoryController(categoryUsecase)
 
 	newsRepo := _driverFactory.NewNewsRepository(db)

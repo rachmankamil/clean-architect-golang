@@ -2,18 +2,21 @@ package category
 
 import (
 	"ca-amartha/businesses"
+	"ca-amartha/businesses/cache"
 	"context"
 	"time"
 )
 
 type categoryUsecase struct {
 	categoryRespository Repository
+	cacheRepository     cache.Repository
 	contextTimeout      time.Duration
 }
 
-func NewCategoryUsecase(timeout time.Duration, cr Repository) Usecase {
+func NewCategoryUsecase(timeout time.Duration, cr Repository, cache cache.Repository) Usecase {
 	return &categoryUsecase{
 		contextTimeout:      timeout,
+		cacheRepository:     cache,
 		categoryRespository: cr,
 	}
 }
