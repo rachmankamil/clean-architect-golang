@@ -27,7 +27,8 @@ jobs:
       matrix:
         go: [ '1.16' ]
     steps:
-      - uses: action/checkout@v2
+      - name: "Git Checkout"
+        uses: actions/checkout@v2
       - name: create database
         run: |
           apt-get update
