@@ -40,4 +40,4 @@ jobs:
           echo "${{ secrets.ENV }}" > ./app/config/config.json
           # mv ./app/config/example-config.json ./app/config/config.json
           go mod tidy
-          go test ./...-cover -failfast
+          go test ./... -cover -failfast
